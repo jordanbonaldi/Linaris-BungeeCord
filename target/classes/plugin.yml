@@ -1,0 +1,5 @@
+name: BungeeAPI
+version: 1.0
+main: net.neferett.linaris.GameServers
+author: Neferett
+depends: [BungeeYAML]
