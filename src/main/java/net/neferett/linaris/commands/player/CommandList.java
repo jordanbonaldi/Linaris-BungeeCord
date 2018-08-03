@@ -10,7 +10,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.neferett.linaris.GameServers;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 
 public class CommandList extends Command {
 
@@ -45,7 +46,7 @@ public class CommandList extends Command {
 					.getModerationLevel() > 1) {
 				final HashMap<ProxiedPlayer, String> map = this.getPlayers();
 				sender.sendMessage("");
-				for (final Rank r : Rank.values()) {
+				for (final RankAPI r : RankManager.getInstance().getRanks()) {
 					final int a = this.getRankPlayers(r.getName(), map);
 					if (a != 0)
 						sender.sendMessage("  §" + r.getColor() + r.getName() + "§f: §7"
@@ -66,7 +67,7 @@ public class CommandList extends Command {
 					.getModerationLevel() > 1) {
 				final HashMap<ProxiedPlayer, String> map = this.getPlayers();
 				sender.sendMessage("");
-				for (final Rank r : Rank.values()) {
+				for (final RankAPI r : RankManager.getInstance().getRanks()) {
 					final int a = this.getRankPlayersByServer(r.getName(), server, map);
 					if (a != 0)
 						sender.sendMessage("  §" + r.getColor() + r.getName() + "§f: §c"

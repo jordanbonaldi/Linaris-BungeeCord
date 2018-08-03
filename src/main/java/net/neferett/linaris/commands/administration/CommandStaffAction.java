@@ -2,7 +2,8 @@ package net.neferett.linaris.commands.administration;
 
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.commands.ModeratorCommand;
 import net.neferett.linaris.managers.player.BPlayer;
 import net.neferett.linaris.managers.player.BPlayerHandler;
@@ -32,7 +33,7 @@ public class CommandStaffAction extends ModeratorCommand {
 			p.sendMessage(
 					"§cUtilisation: /staffaction <rank | mod> <set | add | points> ([Points] <add | set | remove> <number>) ([Rank] <rankname>) <player>");
 		else if (args[0].equalsIgnoreCase("rank") && args.length == 3) {
-			final Rank r = Rank.get(args[1]);
+			final RankAPI r = RankManager.getInstance().getRank(args[1]);
 			final BPlayer pl = BPlayerHandler.get().getPlayer(args[2]);
 
 			if (pl == null) {
@@ -108,8 +109,8 @@ public class CommandStaffAction extends ModeratorCommand {
 			p.remove();
 			final PlayerData pd = GameServers.get().getPlayerDataManager().getPlayerData(d);
 			pd.setInt("modPoints", 0);
-			if (!pd.contains("oldRank") || pd.getInt("oldRank") == Rank.MOD.getID())
-				pd.setRank(Rank.SUPERVIP);
+			if (!pd.contains("oldRank") || pd.getInt("oldRank") == 7)
+				pd.setRank(4);
 			else
 				pd.setRank(pd.getInt("oldRank"));
 			pd.setBoolean("mod", false);

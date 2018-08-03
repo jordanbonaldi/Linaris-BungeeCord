@@ -46,7 +46,7 @@ public class SoloConnectionRequest extends RabbitMQRCPClient {
 		json.put("type", "soloconnect");
 		final PlayerData data = GameServers.get().getPlayerDataManager().getPlayerData(p.getName());
 		json.put("request",
-				new JSONObject(new SoloConnection(p.getName().toLowerCase(), data.getRank().getID(), args).getJSON()));
+				new JSONObject(new SoloConnection(p.getName().toLowerCase(), data.getRank().getId(), args).getJSON()));
 
 		this.setRequestQueueName("gcrequest-" + server.getServName().toLowerCase());
 		this.setMessage(json);

@@ -69,6 +69,13 @@ public class BanCommands extends ModeratorCommand {
 			pl.quit(BanManager.get().BannedEject(time < 0 ? true : false, b.getName(), System.currentTimeMillis(), time,
 					p.getName()));
 
+		// if (p != null) {
+		// pl.connectTo("Lobby");
+		// pl.sendMessage(BanManager.get().BannedEdject(time < 0, b.getName(),
+		// System.currentTimeMillis(), time,
+		// p.getName()));
+		// }
+
 	}
 
 }

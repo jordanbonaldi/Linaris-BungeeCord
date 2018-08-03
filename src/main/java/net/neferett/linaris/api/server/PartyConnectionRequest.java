@@ -55,7 +55,7 @@ public class PartyConnectionRequest extends RabbitMQRCPClient {
 			players[i] = pls.get(i).getName().toLowerCase();
 		final int[] ranks = new int[pls.size()];
 		for (int i = 0; i < pls.size(); i++)
-			ranks[i] = GameServers.get().getPlayerDataManager().getPlayerData(pls.get(i).getName()).getRank().getID();
+			ranks[i] = GameServers.get().getPlayerDataManager().getPlayerData(pls.get(i).getName()).getRank().getId();
 
 		final JSONObject json = new JSONObject();
 		json.put("type", "multiconnect");

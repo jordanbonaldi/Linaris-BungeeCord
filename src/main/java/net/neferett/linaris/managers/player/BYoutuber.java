@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import com.google.api.services.youtube.model.ChannelStatistics;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.managers.player.yt.SubsCount;
 
 public class BYoutuber extends BPlayer {
@@ -16,7 +16,7 @@ public class BYoutuber extends BPlayer {
 
 	public BYoutuber(final ProxiedPlayer p) {
 		super(p);
-		this.infos = new StaffPlayer("yt", p.getName().toLowerCase(), Rank.YT);
+		this.infos = new StaffPlayer("yt", p.getName().toLowerCase(), RankManager.getInstance().getRank(10));
 		if (this.isConfig()) {
 			this.sc = new SubsCount().buildSearch((e) -> e.setId(this.infos.get("channelid")));
 			this.ch = this.sc.getChannel().getStatistics();

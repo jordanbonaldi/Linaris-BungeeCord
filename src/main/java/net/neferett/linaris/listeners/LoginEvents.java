@@ -7,7 +7,7 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.neferett.linaris.GameServers;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.managers.bans.BanManager;
 import net.neferett.linaris.managers.bans.BanManager.IPBans;
 import net.neferett.linaris.managers.bans.BanManager.PseudoBans;
@@ -22,10 +22,10 @@ public class LoginEvents implements Listener {
 	public void onJoin(final PostLoginEvent e) throws Exception {
 		final BPlayer p = BPlayerHandler.get().getPlayer(e.getPlayer());
 
-		if (p.getData().contains("mod") && p.getData().getBoolean("mod") == true)
-			p.addGroup("modo");
-		else
-			p.delGroup("modo");
+		p.getData().setBoolean("connected", true);
+
+		if (p.getData().contains("mod") && !p.getData().getBoolean("mod") && p.getRank().getModerationLevel() > 1)
+			p.getData().setRank(0);
 
 		final DoubleAccount dc = DoubleAccount.get();
 
@@ -36,7 +36,6 @@ public class LoginEvents implements Listener {
 		}
 
 		p.tryIPLog();
-
 	}
 
 	@EventHandler
@@ -77,7 +76,7 @@ public class LoginEvents implements Listener {
 
 		if (ProxyServer.getInstance().getOnlineCount() >= GameServers.get().getConfigManager().getSlots())
 			if (GameServers.get().getPlayerDataManager().getPlayerData(e.getConnection().getName())
-					.getRank() == Rank.Joueur) {
+					.getRank() == RankManager.getInstance().getRank(0)) {
 				e.setCancelled(true);
 				e.setCancelReason(ChatColor.RED + "Le serveur est plein son accès est réservé aux §e§lVIPS");
 				return;

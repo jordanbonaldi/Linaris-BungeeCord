@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import net.craftminecraft.bungee.bungeeyaml.pluginapi.ConfigurablePlugin;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.neferett.linaris.DataBase.rabbitmq.CommandExecutorRabbitMQ;
@@ -20,6 +21,7 @@ import net.neferett.linaris.api.PlayerDataManager;
 import net.neferett.linaris.api.QueuesManagement;
 import net.neferett.linaris.api.friends.FriendsManagement;
 import net.neferett.linaris.api.party.PartiesManagement;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.commands.administration.AlertCommand;
 import net.neferett.linaris.commands.administration.CommandStaffAction;
 import net.neferett.linaris.commands.administration.CommandTokens;
@@ -50,8 +52,6 @@ import net.neferett.linaris.commands.player.RespondCommand;
 import net.neferett.linaris.commands.player.StaffMembers;
 import net.neferett.linaris.commands.player.VoteCommand;
 import net.neferett.linaris.commands.player.YTMembers;
-import net.neferett.linaris.commands.player.data.CommandCoins;
-import net.neferett.linaris.commands.player.data.CommandCredits;
 import net.neferett.linaris.commands.player.login.ChangePWCommand;
 import net.neferett.linaris.commands.player.login.LoginCommand;
 import net.neferett.linaris.commands.player.login.RegisterCommand;
@@ -72,8 +72,8 @@ import net.neferett.linaris.managers.servers.ServersManager;
 import net.neferett.linaris.managers.servers.socket.SocketReceiveMessages;
 import net.neferett.linaris.utils.database.RabbitMQUtils;
 import net.neferett.linaris.utils.tasks.TasksExecutor;
+import net.neferett.linaris.utils.time.TimeUtils;
 import net.neferett.socket.SockServer;
-import net.neferett.socket.api.FastSendMessage;
 import net.neferett.socket.packet.Packet;
 import net.neferett.socket.packet.PacketAction;
 
@@ -110,6 +110,9 @@ public class GameServers extends ConfigurablePlugin {
 	PlayerDataManager	playerDataManager;
 
 	QueuesManagement	queuesManagement;
+
+	@Getter
+	RankManager			ranksmanager;
 
 	SockServer			s;
 
@@ -249,8 +252,6 @@ public class GameServers extends ConfigurablePlugin {
 		this.getProxy().getPluginManager().registerCommand(this, new CommandStaff());
 		this.getProxy().getPluginManager().registerCommand(this, new CommandStaffAction());
 		this.getProxy().getPluginManager().registerCommand(this, new CommandVersion());
-		this.getProxy().getPluginManager().registerCommand(this, new CommandCoins());
-		this.getProxy().getPluginManager().registerCommand(this, new CommandCredits());
 		this.getProxy().getPluginManager().registerCommand(this, new CommandNews());
 		this.getProxy().getPluginManager().registerCommand(this, new ChangepassCommand());
 		this.getProxy().getPluginManager().registerCommand(this, new CommandTokens());
@@ -262,16 +263,15 @@ public class GameServers extends ConfigurablePlugin {
 
 		this.getProxy().getPluginManager().registerCommand(this, new TrackCommand());
 
+		TimeUtils.scheduleAutoReboot();
+
+		this.ranksmanager = new RankManager();
+
 	}
 
 	@Override
 	public void onDisable() {
 		try {
-
-			new FastSendMessage("149.202.65.5", 12000,
-					"stop " + this.getDataFolder().getAbsolutePath().replace(this.getDataFolder().getPath(), "\n"))
-							.build();
-
 			RabbitMQUtils.getConnection().close();
 			this.connector.disable();
 		} catch (final IOException e2) {

@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -21,9 +22,13 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
-import net.neferett.linaris.api.Rank;
 import net.neferett.linaris.api.party.PartiesManagement;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.api.server.GameServer;
+import net.neferett.linaris.managers.bans.BanManager;
+import net.neferett.linaris.managers.bans.BanManager.IPBans;
+import net.neferett.linaris.managers.bans.BanManager.PseudoBans;
 import net.neferett.linaris.managers.player.buy.PlayerBuy;
 import net.neferett.linaris.managers.player.buy.PlayerBuy.BuyItem;
 import net.neferett.linaris.managers.player.cheat.data.CheatData;
@@ -51,7 +56,7 @@ public class BPlayer {
 		this.name = p.getName();
 		this.pd = GameServers.get().getPlayerDataManager().getPlayerData(p.getName());
 		this.online = System.currentTimeMillis();
-		if (!this.getRank().equals(Rank.YT)
+		if (!this.getRank().equals(RankManager.getInstance().getRank(10))
 				&& BPlayerHandler.get().getAllYTs().containsKey(p.getName().toLowerCase())) {
 			final StaffPlayer yt = new StaffPlayer("yt", p.getName());
 			yt.remove();
@@ -86,12 +91,12 @@ public class BPlayer {
 	}
 
 	public void addToStaff() {
-		new StaffPlayer("staff", this.name, Rank.MOD).setInt("points", 100);
+		new StaffPlayer("staff", this.name, RankManager.getInstance().getRank(7)).setInt("points", 100);
 		this.p.removeGroups("modo");
-		this.getData().setRank(Rank.MOD);
+		this.getData().setRank(RankManager.getInstance().getRank(7));
 		this.getData().setBoolean("mod", true);
-		this.getData().setInt("oldRank", this.getRank().getID());
-		this.p.disconnect(TextComponent.fromLegacyText("§cVous faites désormais partie du staff de Linaris !"));
+		this.getData().setInt("oldRank", this.getRank().getId());
+		this.p.disconnect(TextComponent.fromLegacyText("§cVous faites désormais partie du staff de UniverSeven !"));
 	}
 
 	public void callBackConnect(final ServerInfo t, final Callback<Boolean> d) {
@@ -99,15 +104,15 @@ public class BPlayer {
 	}
 
 	public void changeRank(final int id) {
-		if (Rank.get(id) == null)
+		if (RankManager.getInstance().getRank(id) == null)
 			return;
-		this.getData().setRank(Rank.get(id));
+		this.getData().setRank(RankManager.getInstance().getRank(id));
 	}
 
 	public void changeRank(final String name) {
-		if (Rank.get(name) == null)
+		if (RankManager.getInstance().getRank(name) == null)
 			return;
-		this.getData().setRank(Rank.get(name));
+		this.getData().setRank(RankManager.getInstance().getRank(name));
 	}
 
 	public void connect(final String servname) {
@@ -155,7 +160,7 @@ public class BPlayer {
 		return null;
 	}
 
-	public Rank getRank() {
+	public RankAPI getRank() {
 		return this.pd.getRank();
 	}
 
@@ -197,6 +202,7 @@ public class BPlayer {
 		return this.getTimer(n) / 1000 + t - System.currentTimeMillis() / 1000 > 0;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void logPlayer() throws IOException {
 		if (this.isLogged())
 			return;
@@ -207,7 +213,7 @@ public class BPlayer {
 		else
 			this.connectTo("Lobby");
 		final TextComponent welcome = new TextComponent(
-				"§aBonjour §b" + this.p.getName() + "§a et bienvenue sur Linaris");
+				"§aBonjour §b" + this.p.getName() + "§a et bienvenue sur UniverSeven");
 
 		this.sendMessage(welcome);
 
@@ -235,6 +241,19 @@ public class BPlayer {
 			pm.sendMessageToParty(party, true, "§e" + this.p.getName() + " §7§os'est connecté(e)");
 			return;
 		}
+
+		final BanManager bm = BanManager.get();
+
+		final IPBans i = bm.isIPBan(this.p.getPendingConnection().getName());
+		final PseudoBans pseudo = bm.isBan(this.p.getName());
+
+		if (i != null)
+			this.p.sendMessage(bm.BannedEject(i.life(), i.bannedReason(), i.getFromTime(), i.getTime(), i.Bannedby()));
+		else if (pseudo != null) {
+			System.out.println("OK");
+			this.p.sendMessage(bm.BannedEject(pseudo.life(), pseudo.bannedReason(), pseudo.getFromTime(),
+					pseudo.getTime(), pseudo.Bannedby()));
+		}
 	}
 
 	public String onlineSince() {
@@ -247,8 +266,9 @@ public class BPlayer {
 
 	public void removeFromStaff() {
 		new StaffPlayer("staff", this.name).remove();
-		if (!this.getData().contains("oldRank") || this.getData().getInt("oldRank") == Rank.MOD.getID())
-			this.getData().setRank(Rank.SUPERVIP);
+		if (!this.getData().contains("oldRank")
+				|| this.getData().getInt("oldRank") == RankManager.getInstance().getRank(7).getId())
+			this.getData().setRank(RankManager.getInstance().getRank(4));
 		else
 			this.getData().setRank(this.getData().getInt("oldRank"));
 		this.getData().setBoolean("mod", false);
@@ -334,8 +354,12 @@ public class BPlayer {
 	}
 
 	public void tryIPLog() throws IOException {
-		if (this.getAddress().equals(this.pd.get("Log")))
+		if (this.getAddress().equals(this.pd.get("Log"))) {
 			this.logPlayer();
+			ProxyServer.getInstance().getScheduler().schedule(GameServers.get(), () -> {
+				this.connectTo("Lobby");
+			}, 2, TimeUnit.SECONDS);
+		}
 	}
 
 	public void tryLogPlayer() throws IOException {

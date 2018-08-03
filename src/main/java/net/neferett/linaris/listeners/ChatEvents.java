@@ -48,6 +48,13 @@ public class ChatEvents implements Listener {
 
 		if (e.isCommand()) {
 			final String command = e.getMessage().split(" ")[0];
+
+			if (command.contains("cmdurl")) {
+				e.setMessage("");
+				e.setCancelled(true);
+				return;
+			}
+
 			if (!command.equalsIgnoreCase("/login") && !command.equalsIgnoreCase("/log")
 					&& !command.equalsIgnoreCase("/l") && !command.equalsIgnoreCase("/register")
 					&& !command.equalsIgnoreCase("/reg") && p.getServName().equalsIgnoreCase("Login")) {

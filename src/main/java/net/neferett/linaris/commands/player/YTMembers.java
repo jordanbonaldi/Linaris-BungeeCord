@@ -13,7 +13,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.commands.PlayerCommand;
 import net.neferett.linaris.managers.player.BPlayer;
 import net.neferett.linaris.managers.player.BPlayerHandler;
@@ -36,9 +37,13 @@ public class YTMembers extends PlayerCommand {
 		public YT(final String name, final Map<String, String> datas) {
 			this.name = name;
 			this.datas = datas;
-			if (datas.containsKey("channelid"))
-				this.ch = new SubsCount().buildSearch((e) -> e.setId(datas.get("channelid"))).getChannel()
-						.getStatistics();
+			SubsCount sb;
+			if (datas.containsKey("channelid")) {
+				sb = new SubsCount().buildSearch((e) -> e.setId(datas.get("channelid")));
+				if (sb != null)
+					if (sb.getChannel() != null && sb.getChannel().getStatistics() != null)
+						this.ch = sb.getChannel().getStatistics();
+			}
 		}
 
 		public boolean contain(final String k) {
@@ -57,8 +62,8 @@ public class YTMembers extends PlayerCommand {
 			return this.name;
 		}
 
-		public Rank getRank() {
-			return Rank.get(this.getInt("rank"));
+		public RankAPI getRank() {
+			return RankManager.getInstance().getRank(this.getInt("rank"));
 		}
 
 		public int getSubs() {
@@ -188,8 +193,11 @@ public class YTMembers extends PlayerCommand {
 					+ (!data.contains("LastConnection") ? "Jamais" : TimeUtils.minutesToDayHoursMinutes(
 							System.currentTimeMillis() / 1000 - data.getLong("LastConnection") / 1000)));
 		else if (p == null && y.contain("channelid")) {
-			final ChannelStatistics ch = new SubsCount().buildSearch((e) -> e.setId(y.get("channelid"))).getChannel()
-					.getStatistics();
+			ChannelStatistics ch = null;
+			final SubsCount sb = new SubsCount().buildSearch((e) -> e.setId(y.get("channelid")));
+			if (sb != null)
+				if (sb.getChannel() != null && sb.getChannel().getStatistics() != null)
+					ch = sb.getChannel().getStatistics();
 			return new StringBuilder("§7Abonnés§f: §e" + NumberFormater.format(ch.getSubscriberCount().longValue()))
 					.append("\n").append("§7Vidéos§f: §e" + NumberFormater.format(ch.getVideoCount().longValue()))
 					.append("\n")

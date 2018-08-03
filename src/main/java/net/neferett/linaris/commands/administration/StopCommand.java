@@ -9,8 +9,11 @@ import net.neferett.linaris.GameServers;
 import net.neferett.linaris.managers.others.StopManager;
 import net.neferett.linaris.managers.others.StopManager.callBack;
 import net.neferett.linaris.utils.time.TimeUtils;
+import net.neferett.socket.api.FastSendMessage;
 
 public class StopCommand extends Command {
+
+	boolean stopped = false;
 
 	public StopCommand() {
 		super("linaris:stop");
@@ -30,7 +33,12 @@ public class StopCommand extends Command {
 
 			@Override
 			public void cmd() {
-				ProxyServer.getInstance().stop();
+				if (!StopCommand.this.stopped) {
+					new FastSendMessage("149.202.65.5", 12000, "stop " + GameServers.get().getDataFolder()
+							.getAbsolutePath().replace(GameServers.get().getDataFolder().getPath(), "\n")).build();
+					ProxyServer.getInstance().stop();
+					StopCommand.this.stopped = true;
+				}
 			}
 
 			@Override

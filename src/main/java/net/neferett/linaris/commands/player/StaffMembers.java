@@ -10,7 +10,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.commands.PlayerCommand;
 import net.neferett.linaris.managers.player.BPlayer;
 import net.neferett.linaris.managers.player.BPlayerHandler;
@@ -41,8 +42,8 @@ public class StaffMembers extends PlayerCommand {
 			return this.getInt("points");
 		}
 
-		public Rank getRank() {
-			return Rank.get(this.getInt("rank"));
+		public RankAPI getRank() {
+			return RankManager.getInstance().getRank(this.getInt("rank"));
 		}
 
 		public boolean isOnline() {

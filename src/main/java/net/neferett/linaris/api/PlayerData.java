@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.neferett.linaris.GameServers;
+import net.neferett.linaris.api.ranks.RankAPI;
+import net.neferett.linaris.api.ranks.RankManager;
 import net.neferett.linaris.api.server.GameServer;
 import redis.clients.jedis.Jedis;
 
@@ -80,10 +82,10 @@ public class PlayerData extends PlayerDataAbstract {
 		return super.getKeys();
 	}
 
-	public Rank getRank() {
+	public RankAPI getRank() {
 		if (!this.contains("rank"))
 			this.set("rank", Integer.toString(0));
-		return Rank.get(this.getInt("rank"));
+		return RankManager.getInstance().getRank(this.getInt("rank"));
 	}
 
 	public GameServer getReconnectServer() {
@@ -209,14 +211,14 @@ public class PlayerData extends PlayerDataAbstract {
 		this.set("rank", Integer.toString(rank));
 	}
 
-	public void setRank(final Rank rank) {
-		this.set("rank", Integer.toString(rank.getID()));
+	public void setRank(final RankAPI rank) {
+		this.set("rank", Integer.toString(rank.getId()));
 		if (this.contains("rankFinish"))
 			this.remove("rankFinish");
 	}
 
-	public void setRankTime(final Rank rank, final long days) {
-		this.set("rank", Integer.toString(rank.getID()));
+	public void setRankTime(final RankAPI rank, final long days) {
+		this.set("rank", Integer.toString(rank.getId()));
 		if (this.contains("rankFinish"))
 			if (this.getLong("rankFinish") == 0)
 				this.set("rankFinish", Long.toString(System.currentTimeMillis() + days * 86400000));

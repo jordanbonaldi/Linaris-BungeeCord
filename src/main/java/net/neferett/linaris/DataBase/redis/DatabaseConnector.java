@@ -16,6 +16,8 @@ public abstract class DatabaseConnector {
 
 	public abstract Jedis getCheatResource();
 
+	public abstract Jedis getRank();
+
 	public abstract Jedis getResource();
 
 	public abstract Jedis getStaffResource();

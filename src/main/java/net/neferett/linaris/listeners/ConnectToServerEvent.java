@@ -15,8 +15,6 @@ public class ConnectToServerEvent implements Listener {
 	public void OnPlayerSwicth(final ServerConnectEvent e) throws Exception {
 		final BPlayer p = BPlayerHandler.get().getPlayer(e.getPlayer());
 
-		// System.out.println("VIA CONNECT -> " + p.isLogged());
-
 		if (!p.isLogged() && e.getTarget().getName().startsWith("Login")) {
 			p.tryLogPlayer();
 			return;

@@ -15,6 +15,7 @@ public class JoinLeaveEvents implements Listener {
 	public void onQuit(final PlayerDisconnectEvent e) {
 
 		final BPlayer p = BPlayerHandler.get().getPlayer(e.getPlayer());
+		p.getData().setBoolean("connected", false);
 		if (BanManager.get().isBan(p.getName()) == null)
 			DoubleAccount.get().updateMode(p.getAddress(), p.getName(), MODE.OFFLINE);
 

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
 import net.neferett.linaris.commands.ModeratorCommand;
 import net.neferett.linaris.managers.bans.BanManager;
@@ -23,6 +23,7 @@ public class IPBanCommands extends ModeratorCommand {
 		super("ipban", 2);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void execute(final BStaff p, final String[] args) {
 		if (args.length != 2) {
@@ -30,12 +31,9 @@ public class IPBanCommands extends ModeratorCommand {
 			return;
 		}
 
-		final BPlayer pl = BPlayerHandler.get().getPlayer(args[0]);
+		final String player = args[0];
 
-		if (pl == null) {
-			p.sendMessage("§cLe joueur §e" + args[0] + " §cn'existe pas !");
-			return;
-		}
+		final BPlayer pl = BPlayerHandler.get().getPlayer(player);
 
 		final BanReason b = BanManager.get().getReasons().stream()
 				.filter(e -> e.getName().toLowerCase().equals(args[1].toLowerCase())).findFirst().orElse(null);
@@ -52,9 +50,10 @@ public class IPBanCommands extends ModeratorCommand {
 
 		final AtomicInteger time = new AtomicInteger(0);
 
-		DoubleAccount.get().updateMode(pl.getAddress(), pl.getName(), MODE.BANNED);
+		if (pl != null)
+			DoubleAccount.get().updateMode(pl.getAddress(), pl.getName(), MODE.BANNED);
 
-		final PlayerData pd = pl.getData();
+		final PlayerData pd = GameServers.get().getPlayerDataManager().getPlayerData(player);
 
 		if (b.getTimeinc() < 0)
 			time.set(-1);
@@ -68,18 +67,26 @@ public class IPBanCommands extends ModeratorCommand {
 		} else
 			time.set(b.getTimemax());
 
-		BanManager.get().ipBan(pl.getAddress(), pl.getName(), p.getName(), time.get(), b.getName(), true);
+		BanManager.get().ipBan(pd.get("Log"), player, p.getName(), time.get(), b.getName(), true);
 
-		pl.quit(BanManager.get().BannedEject(time.get() < 0 ? true : false, b.getName(), System.currentTimeMillis(),
-				time.get(), p.getName()));
+		if (pl != null)
+			pl.quit(BanManager.get().BannedEject(time.get() < 0 ? true : false, b.getName(), System.currentTimeMillis(),
+					time.get(), p.getName()));
+
+		// if (p != null) {
+		// pl.connectTo("Lobby");
+		// pl.sendMessage(BanManager.get().BannedEdject(time.get() < 0,
+		// b.getName(), System.currentTimeMillis(),
+		// time.get(), p.getName()));
+		// }
 
 		ProxyServer.getInstance().getPlayers().forEach(e -> {
 			if (!e.getName().toLowerCase().equals(pl.getName().toLowerCase())
 					&& e.getAddress().getAddress().getHostAddress().equals(pl.getAddress())) {
 				BanManager.get().ipBan(e.getAddress().getAddress().getHostAddress(), e.getName(), p.getName(),
 						time.get(), b.getName(), false);
-				e.disconnect(TextComponent.fromLegacyText(BanManager.get().BannedEject(time.get() < 0 ? true : false,
-						b.getName(), System.currentTimeMillis(), time.get(), p.getName())));
+				e.disconnect(BanManager.get().BannedEject(time.get() < 0 ? true : false, b.getName(),
+						System.currentTimeMillis(), time.get(), p.getName()));
 			}
 
 		});

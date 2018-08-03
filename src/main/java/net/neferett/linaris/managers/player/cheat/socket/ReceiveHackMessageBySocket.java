@@ -3,7 +3,6 @@ package net.neferett.linaris.managers.player.cheat.socket;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
@@ -56,9 +55,16 @@ public class ReceiveHackMessageBySocket {
 
 			final ProxiedPlayer p = ProxyServer.getInstance().getPlayer(name);
 
+			// if (p != null)
+			// p.disconnect(TextComponent.fromLegacyText(BanManager.get().BannedEject(time
+			// < 0 ? true : false,
+			// b.getName(), System.currentTimeMillis(), time, p.getName())));
+
 			if (p != null)
-				p.disconnect(TextComponent.fromLegacyText(BanManager.get().BannedEject(time < 0 ? true : false,
-						b.getName(), System.currentTimeMillis(), time, p.getName())));
+				GameServers
+						.get().getServersManager().getServer(GameServers.get().getServersManager()
+								.getServersByGameName("hub").getFirst().getServName())
+						.wantGoOn(BPlayerHandler.get().getPlayer(p), true);
 
 			return;
 		} else

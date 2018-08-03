@@ -15,7 +15,7 @@ public class ConnectCommand extends PlayerCommand {
 
 	@Override
 	public void execute(final BPlayer p, final PlayerData pd, final String[] args) {
-		if (pd.getRank().getModerationLevel() < 2)
+		if (pd.getRank().getModerationLevel() < 4)
 			return;
 
 		if (args.length == 1) {

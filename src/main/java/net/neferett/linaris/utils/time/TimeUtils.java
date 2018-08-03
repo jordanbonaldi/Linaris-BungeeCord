@@ -9,8 +9,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.managers.others.StopManager;
 import net.neferett.linaris.managers.others.StopManager.callBack;
+import net.neferett.socket.api.FastSendMessage;
 
 public class TimeUtils {
+
+	private static boolean rebooting = false;
 
 	public static long daysToSeconds(final int a) {
 		return a * 86400;
@@ -102,7 +105,12 @@ public class TimeUtils {
 
 			@Override
 			public void cmd() {
-				ProxyServer.getInstance().stop();
+				if (!rebooting) {
+					new FastSendMessage("149.202.65.5", 12000, "stop " + GameServers.get().getDataFolder()
+							.getAbsolutePath().replace(GameServers.get().getDataFolder().getPath(), "\n")).build();
+					rebooting = true;
+					ProxyServer.getInstance().stop();
+				}
 			}
 
 			@Override

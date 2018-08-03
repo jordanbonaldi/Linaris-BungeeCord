@@ -12,6 +12,7 @@ public class SingleDatabaseConnector extends DatabaseConnector {
 	protected JedisPool		cachePool;
 	protected JedisPool		cachePoolBan;
 	protected JedisPool		cachePoolCheat;
+	protected JedisPool		cachePoolRank;
 	protected JedisPool		cachePoolStaff;
 	protected JedisPool		cachePoolToken;
 	protected JedisPool		mainPool;
@@ -96,6 +97,27 @@ public class SingleDatabaseConnector extends DatabaseConnector {
 			this.cachePoolCheat = new JedisPool(config, mainParts[0], mainPort, 5000, this.password, 5);
 
 			return this.cachePoolCheat.getResource();
+		}
+	}
+
+	@Override
+	public Jedis getRank() {
+		try {
+			return this.cachePoolRank.getResource();
+		} catch (final Exception e) {
+
+			final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+			config.setMaxTotal(20);
+			config.setMinIdle(5);
+			config.setMaxIdle(10);
+			config.setMaxWaitMillis(200L);
+			config.setBlockWhenExhausted(false);
+
+			final String[] mainParts = StringUtils.split(this.masterIp, ":");
+			final int mainPort = mainParts.length > 1 ? Integer.decode(mainParts[1]) : 6379;
+			this.cachePoolRank = new JedisPool(config, mainParts[0], mainPort, 5000, this.password, 8);
+
+			return this.cachePoolRank.getResource();
 		}
 	}
 
@@ -186,6 +208,8 @@ public class SingleDatabaseConnector extends DatabaseConnector {
 
 		this.cachePoolBan = new JedisPool(config, mainParts[0], mainPort, 5000, this.password, 6);
 
+		this.cachePoolRank = new JedisPool(config, mainParts[0], mainPort, 5000, this.password, 8);
+
 		this.plugin.getLogger().info("[Database] Connection initialized.");
 
 	}
@@ -198,6 +222,7 @@ public class SingleDatabaseConnector extends DatabaseConnector {
 		this.cachePoolStaff.destroy();
 		this.cachePoolCheat.destroy();
 		this.cachePoolBan.destroy();
+		this.cachePoolRank.destroy();
 	}
 
 }

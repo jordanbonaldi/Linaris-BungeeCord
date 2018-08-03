@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.neferett.linaris.GameServers;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankManager;
 import redis.clients.jedis.Jedis;
 
 public class BPlayerHandler {
@@ -70,7 +70,7 @@ public class BPlayerHandler {
 				.getModerationLevel() >= 1)
 			return this.getStaff(p);
 		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.getName().toLowerCase()).getRank()
-				.equals(Rank.YT))
+				.equals(RankManager.getInstance().getRank(10)))
 			return this.getYT(p);
 		if (this.pl.containsKey(p.getName().toLowerCase()))
 			return this.pl.get(p.getName().toLowerCase());
@@ -84,7 +84,8 @@ public class BPlayerHandler {
 			return null;
 		if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank().getModerationLevel() >= 1)
 			return this.getStaff(p);
-		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank().equals(Rank.YT))
+		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank()
+				.equals(RankManager.getInstance().getRank(10)))
 			return this.getYT(p);
 		if (this.pl.containsKey(p.toLowerCase()))
 			return this.pl.get(p.toLowerCase());
@@ -116,7 +117,8 @@ public class BPlayerHandler {
 	}
 
 	public BYoutuber getYT(final ProxiedPlayer p) {
-		if (!GameServers.get().getPlayerDataManager().getPlayerData(p.getName()).getRank().equals(Rank.YT))
+		if (!GameServers.get().getPlayerDataManager().getPlayerData(p.getName()).getRank()
+				.equals(RankManager.getInstance().getRank(10)))
 			return null;
 		if (this.py.containsKey(p.getName().toLowerCase()))
 			return this.py.get(p.getName().toLowerCase());
@@ -126,7 +128,8 @@ public class BPlayerHandler {
 	}
 
 	public BYoutuber getYT(final String p) {
-		if (!GameServers.get().getPlayerDataManager().getPlayerData(p).getRank().equals(Rank.YT))
+		if (!GameServers.get().getPlayerDataManager().getPlayerData(p).getRank()
+				.equals(RankManager.getInstance().getRank(10)))
 			return null;
 		if (this.py.containsKey(p.toLowerCase()))
 			return this.py.get(p.toLowerCase());

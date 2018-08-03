@@ -2,7 +2,7 @@ package net.neferett.linaris.managers.player;
 
 import net.neferett.linaris.GameServers;
 import net.neferett.linaris.DataBase.RedisAbstract;
-import net.neferett.linaris.api.Rank;
+import net.neferett.linaris.api.ranks.RankAPI;
 
 public class StaffPlayer extends RedisAbstract {
 
@@ -11,10 +11,10 @@ public class StaffPlayer extends RedisAbstract {
 		this.refresh();
 	}
 
-	public StaffPlayer(final String s, final String name, final Rank r) {
+	public StaffPlayer(final String s, final String name, final RankAPI r) {
 		this(s, name);
-		if (!this.cache.containsKey("rank") || r.getID() != this.getInt("rank"))
-			this.setInt("rank", r.getID());
+		if (!this.cache.containsKey("rank") || r.getId() != this.getInt("rank"))
+			this.setInt("rank", r.getId());
 	}
 
 }
