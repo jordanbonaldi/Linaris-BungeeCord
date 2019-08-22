@@ -49,8 +49,8 @@ public class ConfigManager {
 			this.loadPings();
 			this.handleAutoMessages();
 
-			this.read("banreasons");
-			this.readBanReason();
+//			this.read("banreasons");
+//			this.readBanReason();
 		} catch (final JSONException | IOException e) {
 			e.printStackTrace();
 		}
@@ -153,7 +153,7 @@ public class ConfigManager {
 	}
 
 	void read(final String configname) throws IOException, JSONException {
-		this.files = new ReadFile("plugins/BungeeAPI/config/" + configname + ".json").getFile();
+		this.files = new ReadFile("plugins/BungeeAPI/" + configname + ".json").getFile();
 
 		this.jsonfile = new StringBuilder().append(StringUtils.join(this.files, " "));
 
@@ -176,12 +176,12 @@ public class ConfigManager {
 	}
 
 	public void refresh() {
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/bg.json", "plugins/BungeeAPI/config/");
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/banreasons.json", "plugins/BungeeAPI/config/");
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/messages.json", "plugins/BungeeAPI/config/");
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/motd.json", "plugins/BungeeAPI/config/");
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/blacklist.txt", "plugins/BungeeAPI/");
-		DownloaderFile.downloadFromURL("http://config.linaris.fr/config/ignored.txt", "plugins/BungeeAPI/");
+		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/bg.json", "./plugins/BungeeAPI/");
+//		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/banreasons.json", "./plugins/BungeeAPI/config/");
+		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/messages.json", "./plugins/BungeeAPI/");
+		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/motd.json", "./plugins/BungeeAPI/");
+//		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/blacklist.txt", "./plugins/BungeeAPI/");
+//		DownloaderFile.downloadFromURL("http://163.172.82.135:8989/ignored.txt", "./plugins/BungeeAPI/");
 		this.build();
 	}
 

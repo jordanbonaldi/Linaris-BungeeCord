@@ -37,9 +37,7 @@ public class BPlayerHandler {
 	public Map<String, Map<String, String>> getAllStaffs() {
 		final Map<String, Map<String, String>> staffs = new HashMap<>();
 		final Jedis j = GameServers.get().getConnector().getStaffResource();
-		j.keys("staff:*").forEach(name -> {
-			staffs.put(name.substring(6), j.hgetAll("staff:" + name.substring(6)));
-		});
+		j.keys("staff:*").forEach(name -> staffs.put(name.substring(6), j.hgetAll("staff:" + name.substring(6))));
 		j.close();
 		return staffs;
 	}

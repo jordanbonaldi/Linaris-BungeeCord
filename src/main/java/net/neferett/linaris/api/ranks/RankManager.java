@@ -54,9 +54,7 @@ public class RankManager {
 
 	public void getGeneralRanks() {
 		final Jedis j = GameServers.get().getConnector().getRank();
-		j.keys("ranks:*").forEach(key -> {
-			this.addRank(this.deserializeRank(j.hget(key, "serializedRank")));
-		});
+		j.keys("ranks:*").forEach(key -> this.addRank(this.deserializeRank(j.hget(key, "serializedRank"))));
 		j.close();
 	}
 

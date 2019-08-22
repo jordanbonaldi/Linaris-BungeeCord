@@ -13,12 +13,12 @@ public class ConfigUtils {
 	private FileConfiguration 	config;
 	
 	public ConfigUtils(boolean def){
-		file = new File("/home/Serveurs/Templates/Bungee/plugins/BungeeAPI/config.yml");
+		file = new File("./plugins/BungeeAPI/config.yml");
 		config = GameServers.get().getConfig();
 	}
 	
 	public ConfigUtils(String name){
-		file = new File("/home/Serveurs/Templates/Bungee/plugins/BungeeAPI/" + name);
+		file = new File("./plugins/BungeeAPI/" + name);
 		config = YamlConfiguration.loadConfiguration(file);
 		save();
 	}

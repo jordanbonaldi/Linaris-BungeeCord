@@ -39,9 +39,7 @@ public class AutoMessageManager {
 	}
 
 	public void start() {
-		this.task = ProxyServer.getInstance().getScheduler().schedule(GameServers.get(), () -> {
-			this.next().display();
-		}, 3, 3, TimeUnit.MINUTES);
+		this.task = ProxyServer.getInstance().getScheduler().schedule(GameServers.get(), () -> this.next().display(), 3, 3, TimeUnit.MINUTES);
 	}
 
 }

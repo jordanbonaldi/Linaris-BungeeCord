@@ -228,13 +228,13 @@ public class GameServers extends ConfigurablePlugin {
 		this.getProxy().getPluginManager().registerListener(this, new PingEvent());
 
 		this.getProxy().getPluginManager().registerCommand(this, new YTMembers());
-		this.getProxy().getPluginManager().registerCommand(this, new BanCommands());
-		this.getProxy().getPluginManager().registerCommand(this, new KickCommand());
-		this.getProxy().getPluginManager().registerCommand(this, new DCCommands());
-		this.getProxy().getPluginManager().registerCommand(this, new MuteCommands());
-		this.getProxy().getPluginManager().registerCommand(this, new UnMuteCommands());
-		this.getProxy().getPluginManager().registerCommand(this, new IPBanCommands());
-		this.getProxy().getPluginManager().registerCommand(this, new UnBanCommand());
+//		this.getProxy().getPluginManager().registerCommand(this, new BanCommands());
+//		this.getProxy().getPluginManager().registerCommand(this, new KickCommand());
+//		this.getProxy().getPluginManager().registerCommand(this, new DCCommands());
+//		this.getProxy().getPluginManager().registerCommand(this, new MuteCommands());
+//		this.getProxy().getPluginManager().registerCommand(this, new UnMuteCommands());
+//		this.getProxy().getPluginManager().registerCommand(this, new IPBanCommands());
+//		this.getProxy().getPluginManager().registerCommand(this, new UnBanCommand());
 		this.getProxy().getPluginManager().registerCommand(this, new StopCommand());
 		this.getProxy().getPluginManager().registerCommand(this, new ReloadConfig());
 		this.getProxy().getPluginManager().registerCommand(this, new MessageCommand());

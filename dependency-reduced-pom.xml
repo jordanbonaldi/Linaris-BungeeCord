@@ -78,7 +78,7 @@
       <artifactId>bungeecord-api</artifactId>
       <version>1.8-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>C:\Users\Neferett\LB\BungeeCord.jar</systemPath>
+      <systemPath>/home/jordan/Bureau/Libs/BungeeCord.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -91,7 +91,7 @@
       <artifactId>yaml</artifactId>
       <version>3.4</version>
       <scope>system</scope>
-      <systemPath>C:\Users\Neferett\LB\BungeeYAML.jar</systemPath>
+      <systemPath>/home/jordan/Bureau/Libs/BungeeYAML.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>

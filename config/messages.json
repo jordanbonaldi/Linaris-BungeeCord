@@ -1,0 +1,20 @@
+{
+  "news": {
+    "activated": true,
+    "news": [{
+         "name": "toto",
+         "desc": "toto"
+    }]
+  },
+  "ping": {
+    "message": "t1²dd²ss²"
+  },
+  "automessage": {
+    "list": [{
+      "type": "Boutique",
+      "desc": "Achetes stp",
+      "command": true,
+      "info": "test"
+    }]
+  }
+}
