@@ -27,15 +27,15 @@ public class LoginEvents implements Listener {
 		if (p.getData().contains("mod") && !p.getData().getBoolean("mod") && p.getRank().getModerationLevel() > 1)
 			p.getData().setRank(0);
 
-		final DoubleAccount dc = DoubleAccount.get();
+//		final DoubleAccount dc = DoubleAccount.get();
+//
+//		if (p.getAddress() != p.getData().get("Log")) {
+//			dc.removeFrom(p.getData().get("Log"), p.getName());
+//			dc.addToIP(p.getAddress(), p.getName());
+//			dc.updateMode(p.getAddress(), p.getName(), MODE.ONLINE);
+//		}
 
-		if (p.getAddress() != p.getData().get("Log")) {
-			dc.removeFrom(p.getData().get("Log"), p.getName());
-			dc.addToIP(p.getAddress(), p.getName());
-			dc.updateMode(p.getAddress(), p.getName(), MODE.ONLINE);
-		}
-
-		p.tryIPLog();
+		//p.tryIPLog();
 	}
 
 	@EventHandler
@@ -56,23 +56,23 @@ public class LoginEvents implements Listener {
 
 		e.completeIntent(GameServers.get());
 
-		final String ip = e.getConnection().getAddress().getAddress().getHostAddress();
-
-		final BanManager bm = BanManager.get();
-
-		final IPBans i = bm.isIPBan(ip);
-		final PseudoBans pseudo = bm.isBan(e.getConnection().getName());
-
-		if (i != null) {
-			e.setCancelReason(bm.BannedEject(i.life(), i.bannedReason(), i.getFromTime(), i.getTime(), i.Bannedby()));
-			e.setCancelled(true);
-			return;
-		} else if (pseudo != null) {
-			e.setCancelReason(bm.BannedEject(pseudo.life(), pseudo.bannedReason(), pseudo.getFromTime(),
-					pseudo.getTime(), pseudo.Bannedby()));
-			e.setCancelled(true);
-			return;
-		}
+//		final String ip = e.getConnection().getAddress().getAddress().getHostAddress();
+//
+//		final BanManager bm = BanManager.get();
+//
+//		final IPBans i = bm.isIPBan(ip);
+//		final PseudoBans pseudo = bm.isBan(e.getConnection().getName());
+//
+//		if (i != null) {
+//			e.setCancelReason(bm.BannedEject(i.life(), i.bannedReason(), i.getFromTime(), i.getTime(), i.Bannedby()));
+//			e.setCancelled(true);
+//			return;
+//		} else if (pseudo != null) {
+//			e.setCancelReason(bm.BannedEject(pseudo.life(), pseudo.bannedReason(), pseudo.getFromTime(),
+//					pseudo.getTime(), pseudo.Bannedby()));
+//			e.setCancelled(true);
+//			return;
+//		}
 
 		if (ProxyServer.getInstance().getOnlineCount() >= GameServers.get().getConfigManager().getSlots())
 			if (GameServers.get().getPlayerDataManager().getPlayerData(e.getConnection().getName())

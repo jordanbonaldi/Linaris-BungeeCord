@@ -38,6 +38,7 @@ public enum Games {
 	TWD(23, "twd", "TheWalkingDead"),
 	UHC(4, "uhc", "UHC"),
 	UHCRUN(5, "uhcrun", "UHCRun"),
+	LOGIN(35, "Login", "Login"),
 	UHCRUNSolo(32, "uhcrunsolo", "UHCRunSolo");
 
 	public static Games getByDisplayName(final String name) {

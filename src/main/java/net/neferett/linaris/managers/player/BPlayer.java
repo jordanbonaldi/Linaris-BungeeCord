@@ -2,10 +2,7 @@ package net.neferett.linaris.managers.player;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -96,7 +93,7 @@ public class BPlayer {
 		this.getData().setRank(RankManager.getInstance().getRank(7));
 		this.getData().setBoolean("mod", true);
 		this.getData().setInt("oldRank", this.getRank().getId());
-		this.p.disconnect(TextComponent.fromLegacyText("§cVous faites désormais partie du staff de UniverSeven !"));
+		this.p.disconnect(TextComponent.fromLegacyText("§cVous faites désormais partie du staff de ??? !"));
 	}
 
 	public void callBackConnect(final ServerInfo t, final Callback<Boolean> d) {
@@ -127,7 +124,7 @@ public class BPlayer {
 				.filter(gm -> gm.getPlayers() + 1 <= gm.getMaxPlayers() && gm.canJoin()
 						&& (this.p.getServer() == null
 								|| !this.p.getServer().getInfo().getName().equals(gm.getServName())))
-				.sorted((gm1, gm2) -> gm1.getPlayers() - gm2.getPlayers()).findFirst().orElse(null);
+				.sorted(Comparator.comparingInt(GameServer::getPlayers)).findFirst().orElse(null);
 		if (serv == null)
 			return;
 		serv.wantGoOn(this, true);
@@ -173,7 +170,7 @@ public class BPlayer {
 				.filter(gm -> gm.getPlayers() + 1 <= gm.getMaxPlayers() && gm.canJoin()
 						&& (this.p.getServer() == null
 								|| !this.p.getServer().getInfo().getName().equals(gm.getServName())))
-				.sorted((gm1, gm2) -> gm1.getPlayers() - gm2.getPlayers())
+				.sorted(Comparator.comparingInt(GameServer::getPlayers))
 				.map(gm -> ProxyServer.getInstance().getServerInfo(gm.getServName())).findFirst().orElse(null);
 	}
 
@@ -213,7 +210,7 @@ public class BPlayer {
 		else
 			this.connectTo("Lobby");
 		final TextComponent welcome = new TextComponent(
-				"§aBonjour §b" + this.p.getName() + "§a et bienvenue sur UniverSeven");
+				"§aBonjour §b" + this.p.getName() + "§a et bienvenue sur ???");
 
 		this.sendMessage(welcome);
 

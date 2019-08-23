@@ -67,9 +67,9 @@ public class BPlayerHandler {
 		if (GameServers.get().getPlayerDataManager().getPlayerData(p.getName().toLowerCase()).getRank()
 				.getModerationLevel() >= 1)
 			return this.getStaff(p);
-		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.getName().toLowerCase()).getRank()
-				.equals(RankManager.getInstance().getRank(10)))
-			return this.getYT(p);
+//		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.getName().toLowerCase()).getRank()
+//				.equals(RankManager.getInstance().getRank(10)))
+//			return this.getYT(p);
 		if (this.pl.containsKey(p.getName().toLowerCase()))
 			return this.pl.get(p.getName().toLowerCase());
 		final BPlayer bp = new BPlayer(p);
@@ -82,9 +82,9 @@ public class BPlayerHandler {
 			return null;
 		if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank().getModerationLevel() >= 1)
 			return this.getStaff(p);
-		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank()
-				.equals(RankManager.getInstance().getRank(10)))
-			return this.getYT(p);
+//		else if (GameServers.get().getPlayerDataManager().getPlayerData(p.toLowerCase()).getRank()
+//				.equals(RankManager.getInstance().getRank(10)))
+//			return this.getYT(p);
 		if (this.pl.containsKey(p.toLowerCase()))
 			return this.pl.get(p.toLowerCase());
 		final BPlayer bp = new BPlayer(GameServers.get().getProxy().getPlayer(p));

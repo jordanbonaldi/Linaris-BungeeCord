@@ -16,29 +16,11 @@ public class ConnectToServerEvent implements Listener {
 		final BPlayer p = BPlayerHandler.get().getPlayer(e.getPlayer());
 
 		if (!p.isLogged() && e.getTarget().getName().startsWith("Login")) {
+			System.out.println("toto");
 			p.tryLogPlayer();
 			return;
 		} else if (e.getTarget().getName().startsWith("Login")) {
 			p.connectTo("Lobby");
-			return;
-		} else if (e.getTarget().getName().contains("hub")) {
-			final BYoutuber yt = BPlayerHandler.get().getYT(e.getPlayer());
-
-			if (yt == null)
-				return;
-			else if (!yt.isConfig()) {
-				yt.sendMessage("§7§m--------------------------------");
-				yt.sendMessage("");
-				yt.sendMessage("§7Notre systeme à remarqué que vous avez oublié de");
-				yt.sendMessage("§7configurer votre grade §fYou§cTuber§7 pour se faire faites§f:");
-				yt.sendMessage("");
-				yt.sendMessage("      §c/yt config <channelid>");
-				yt.sendMessage("");
-				yt.sendMessage("§7Les joueurs pourront ainsi voir votre nombre d'abonnés et de vues en direct via§f:");
-				yt.sendMessage("      §c/yt §7ou §c/yt <pseudo>");
-				yt.sendMessage("");
-				yt.sendMessage("§7§m--------------------------------");
-			}
 			return;
 		}
 
