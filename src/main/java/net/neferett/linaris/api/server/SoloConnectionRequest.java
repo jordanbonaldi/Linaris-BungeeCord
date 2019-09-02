@@ -6,6 +6,7 @@ import net.neferett.linaris.GameServers;
 import net.neferett.linaris.api.PlayerData;
 import net.neferett.linaris.managers.player.BPlayer;
 import net.neferett.linaris.utils.database.RabbitMQRCPClient;
+import net.neferett.linaris.utils.json.JSONException;
 import net.neferett.linaris.utils.json.JSONObject;
 
 public class SoloConnectionRequest extends RabbitMQRCPClient {
@@ -51,15 +52,19 @@ public class SoloConnectionRequest extends RabbitMQRCPClient {
 		this.setRequestQueueName("gcrequest-" + server.getServName().toLowerCase());
 		this.setMessage(json);
 
-		this.send();
+		try {
+			this.send();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		final JSONObject jcallb = this.getCallback();
 
 		if (jcallb != null)
 			try {
-
 				final ConnectionServerRespond respond = new Gson().fromJson(jcallb.toString(),
 						ConnectionServerRespond.class);
+
 				if (respond != null)
 					callback.done(server, respond.getStatus(), p);
 				else
@@ -70,7 +75,6 @@ public class SoloConnectionRequest extends RabbitMQRCPClient {
 			}
 		else
 			callback.done(server, ConnectionStatus.DENY, p);
-
 	}
 
 }

@@ -106,7 +106,7 @@ public class TimeUtils {
 			@Override
 			public void cmd() {
 				if (!rebooting) {
-					new FastSendMessage("149.202.65.5", 12000, "stop " + GameServers.get().getDataFolder()
+					new FastSendMessage("127.0.0.1", 12000, "stop " + GameServers.get().getDataFolder()
 							.getAbsolutePath().replace(GameServers.get().getDataFolder().getPath(), "\n")).build();
 					rebooting = true;
 					ProxyServer.getInstance().stop();

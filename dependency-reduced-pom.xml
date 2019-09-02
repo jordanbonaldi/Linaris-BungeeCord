@@ -78,12 +78,12 @@
       <artifactId>bungeecord-api</artifactId>
       <version>1.8-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>/home/jordan/Bureau/Libs/BungeeCord.jar</systemPath>
+      <systemPath>C:/Users/Jordan/iCloudDrive/Documents/work/Hyconia/Libs/BungeeCord.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.6</version>
+      <version>1.18.4</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -91,15 +91,15 @@
       <artifactId>yaml</artifactId>
       <version>3.4</version>
       <scope>system</scope>
-      <systemPath>/home/jordan/Bureau/Libs/BungeeYAML.jar</systemPath>
+      <systemPath>C:/Users/Jordan/iCloudDrive/Documents/work/Hyconia/Libs/BungeeYAML.jar</systemPath>
     </dependency>
   </dependencies>
   <properties>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.build.timestamp.format>yyMMdd</maven.build.timestamp.format>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 </project>
 

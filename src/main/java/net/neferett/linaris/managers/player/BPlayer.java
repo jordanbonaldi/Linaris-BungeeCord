@@ -97,7 +97,7 @@ public class BPlayer {
 	}
 
 	public void callBackConnect(final ServerInfo t, final Callback<Boolean> d) {
-		this.p.connect(t, d);
+		GameServers.get().getProxy().getPlayer(this.p.getName()).connect(t, d);
 	}
 
 	public void changeRank(final int id) {
@@ -123,8 +123,7 @@ public class BPlayer {
 		final GameServer serv = GameServers.get().getServersManager().getServersByGameName(servname).stream()
 				.filter(gm -> gm.getPlayers() + 1 <= gm.getMaxPlayers() && gm.canJoin()
 						&& (this.p.getServer() == null
-								|| !this.p.getServer().getInfo().getName().equals(gm.getServName())))
-				.sorted(Comparator.comparingInt(GameServer::getPlayers)).findFirst().orElse(null);
+						|| !this.p.getServer().getInfo().getName().equals(gm.getServName()))).min(Comparator.comparingInt(GameServer::getPlayers)).orElse(null);
 		if (serv == null)
 			return;
 		serv.wantGoOn(this, true);
@@ -359,26 +358,30 @@ public class BPlayer {
 		}
 	}
 
-	public void tryLogPlayer() throws IOException {
-		if (this.getAddress().equals(this.pd.get("Log")))
-			this.logPlayer();
-		else
-			ProxyServer.getInstance().getScheduler().runAsync(GameServers.get(), () -> {
+	public void printMessageLogin() {
+		if (!this.pd.contains("password")) {
+			this.sendMessage("§aVotre compte n'existe pas encore !");
+			this.sendMessage("§f");
+			this.sendMessage("§eEnregistrez votre compte avec la commande suivante§f:");
+			this.sendMessage("§c/register <MotDePasse> <MotDePasse>");
+		} else {
+			this.sendMessage("§aVotre compte a bien été chargé..");
+			this.sendMessage("§f");
+			this.sendMessage("§eConnectez vous avec la commande suivante§f:");
+			this.sendMessage("§c/login <MotDePasse>");
+		}
+	}
 
-				if (!this.pd.contains("password")) {
-					this.sendMessage("§aVotre compte n'existe pas encore !");
-					this.sendMessage("§f");
-					this.sendMessage("§eEnregistrez votre compte avec la commande suivante§f:");
-					this.sendMessage("§c/register <MotDePasse> <MotDePasse>");
-					return;
-				} else {
-					this.sendMessage("§aVotre compte a bien été chargé..");
-					this.sendMessage("§f");
-					this.sendMessage("§eConnectez vous avec la commande suivante§f:");
-					this.sendMessage("§c/login <MotDePasse>");
+	public void tryLogPlayer() {
+		ProxyServer.getInstance().getScheduler().schedule(GameServers.get(), () -> {
+			if (this.pd.contains("Log") && this.getAddress().equals(this.pd.get("Log")))
+				try {
+					this.logPlayer();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-
-			});
+			else ProxyServer.getInstance().getScheduler().runAsync(GameServers.get(), this::printMessageLogin);
+		}, 1, TimeUnit.SECONDS);
 	}
 
 }

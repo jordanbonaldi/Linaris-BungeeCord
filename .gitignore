@@ -1,1 +1,9 @@
-/target/
+target
+pom.xml
+dependency-reduced-pom.xml
+.settings
+.idea
+.settings
+*.prefs
+*.prefs
+*.class

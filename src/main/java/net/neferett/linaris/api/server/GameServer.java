@@ -58,7 +58,7 @@ public class GameServer implements Comparable<GameServer> {
 		return this.gameName;
 	}
 
-	public long getLastHeartbeet() {
+	public Long getLastHeartbeet() {
 		return this.lastHeartbeet;
 	}
 
@@ -190,6 +190,22 @@ public class GameServer implements Comparable<GameServer> {
 		this.players = players;
 	}
 
+	private boolean canJoinAndSee(BPlayer p, SoloConnectionServerCallBack callback) {
+		if (!this.canJoin) {
+			if (callback != null)
+				callback.done(this, ConnectionStatus.DENY, p);
+			return true;
+		}
+
+		if (!this.canSee) {
+			if (callback != null)
+				callback.done(this, ConnectionStatus.DENY, p);
+			return true;
+		}
+
+		return false;
+	}
+
 	public void wantGoOn(final BPlayer p, final boolean useInfos, final SoloConnectionServerCallBack callback,
 			final String... args) {
 
@@ -199,18 +215,8 @@ public class GameServer implements Comparable<GameServer> {
 			return;
 		}
 
-		if (useInfos) {
-			if (!this.canJoin) {
-				if (callback != null)
-					callback.done(this, ConnectionStatus.DENY, p);
-				return;
-			}
-			if (!this.canSee) {
-				if (callback != null)
-					callback.done(this, ConnectionStatus.DENY, p);
-				return;
-			}
-		}
+		if (useInfos && this.canJoinAndSee(p, callback))
+			return;
 
 		ProxyServer.getInstance().getScheduler().runAsync(GameServers.get(), () -> {
 
@@ -224,12 +230,14 @@ public class GameServer implements Comparable<GameServer> {
 
 						player.callBackConnect(info, (aBoolean, throwable) -> {
 
-							if (aBoolean) {
+							System.out.println(aBoolean);
+
+//							if (aBoolean) {
 								this.players++;
 								final PlayerData data = GameServers.get().getPlayerDataManager()
 										.getPlayerData(player.getName());
 								data.setCurrentServer(this);
-							}
+//							}
 
 						});
 
@@ -242,13 +250,9 @@ public class GameServer implements Comparable<GameServer> {
 
 			} catch (final Exception e) {
 				e.printStackTrace();
-				return;
 			}
 
 		});
-
-		return;
-
 	}
 
 	public void wantGoOn(final BPlayer p, final boolean useInfos, final String... args) {

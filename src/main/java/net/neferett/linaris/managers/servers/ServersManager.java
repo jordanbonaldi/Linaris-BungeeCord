@@ -2,11 +2,7 @@ package net.neferett.linaris.managers.servers;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +18,7 @@ import redis.clients.jedis.Jedis;
 public class ServersManager {
 
 	private final GameServers						plugin;
-	private ConcurrentHashMap<String, GameServer>	servers	= new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, GameServer>	servers;
 	private final HeartbeatSuscriber				suscriber;
 
 	public ServersManager(final GameServers plugin) throws IOException {
@@ -46,8 +42,8 @@ public class ServersManager {
 		this.suscriber = new HeartbeatSuscriber(this);
 	}
 
-	void checkServers() {
-		this.servers.values().stream().filter(server -> !server.isOnline()).forEach(server -> {
+	private void checkServers() {
+		this.servers.values().stream().filter(server -> server.getLastHeartbeet() != null &&!server.isOnline()).forEach(server -> {
 			ProxyServer.getInstance().getLogger()
 					.severe("[Servers] Server " + server.getServName() + " detected as offline, removing.");
 			this.remove(server.getServName());
@@ -73,10 +69,10 @@ public class ServersManager {
 		final GameServer gameServer = new GameServer(System.currentTimeMillis(), server, info);
 		gameServer.setGameName(gameName);
 		gameServer.setMapName(mapName);
-		gameServer.setMaxPlayers(Integer.valueOf(maxPlayers));
-		gameServer.setPlayers(Integer.valueOf(players));
-		gameServer.setCanJoin(Boolean.valueOf(canJoin));
-		gameServer.setCanSee(Boolean.valueOf(canSee));
+		gameServer.setMaxPlayers(Integer.parseInt(maxPlayers));
+		gameServer.setPlayers(Integer.parseInt(players));
+		gameServer.setCanJoin(Boolean.parseBoolean(canJoin));
+		gameServer.setCanSee(Boolean.parseBoolean(canSee));
 		this.servers.put(server, gameServer);
 
 		ProxyServer.getInstance().getLogger().info("[Servers] Created server " + server + " - " + gameName
@@ -123,18 +119,14 @@ public class ServersManager {
 
 	public LinkedList<GameServer> getServersByGameName(final String string) {
 		final LinkedList<GameServer> servers = new LinkedList<>();
-		this.servers.values().stream().filter((g) -> !g.isFake() && g.getGameName().equals(string)).forEach((g) -> {
-			servers.add(g);
-		});
+		this.servers.values().stream().filter((g) -> !g.isFake() && g.getGameName().equals(string)).forEach(servers::add);
 		return servers;
 	}
 
 	public LinkedList<GameServer> getServersByGameNameAndMap(final String string, final String map) {
 		final LinkedList<GameServer> servers = this.getServersByGameName(string);
 		final LinkedList<GameServer> mpservers = new LinkedList<>();
-		servers.stream().filter((g) -> g.getMapName().equals(map)).forEach((g) -> {
-			mpservers.add(g);
-		});
+		servers.stream().filter((g) -> g.getMapName().equals(map)).forEach(mpservers::add);
 		return mpservers;
 	}
 
@@ -156,10 +148,10 @@ public class ServersManager {
 			server.heartBeet();
 			server.setGameName(gameName);
 			server.setMapName(mapName);
-			server.setMaxPlayers(Integer.valueOf(maxPlayers));
-			server.setPlayers(Integer.valueOf(players));
-			server.setCanJoin(Boolean.valueOf(canJoin));
-			server.setCanSee(Boolean.valueOf(canSee));
+			server.setMaxPlayers(Integer.parseInt(maxPlayers));
+			server.setPlayers(Integer.parseInt(players));
+			server.setCanJoin(Boolean.parseBoolean(canJoin));
+			server.setCanSee(Boolean.parseBoolean(canSee));
 		}
 	}
 
@@ -167,12 +159,12 @@ public class ServersManager {
 		GameServers.get().getTasksManager().addTask(() -> {
 			final Jedis j = GameServers.get().getConnector().getBungeeResource();
 
-			j.hgetAll("servers").entrySet().forEach((map) -> {
-				if (!this.servers.containsKey(map.getKey())) {
+			j.hgetAll("servers").forEach((key, value) -> {
+				if (!this.servers.containsKey(key)) {
 					int i = 0;
-					final List<String> serversinfo = Arrays.asList(map.getValue().split(":"));
+					final List<String> serversinfo = Arrays.asList(value.split(":"));
 
-					this.createServer(map.getKey(), serversinfo.get(i++), serversinfo.get(i++), serversinfo.get(i++),
+					this.createServer(key, serversinfo.get(i++), serversinfo.get(i++), serversinfo.get(i++),
 							serversinfo.get(i++), serversinfo.get(i++), serversinfo.get(i++), serversinfo.get(i++),
 							serversinfo.get(i));
 				}
@@ -183,7 +175,7 @@ public class ServersManager {
 
 	public String registerServer(String gameName, final String ip, final int port) {
 
-		gameName = Games.getByDisplayName(gameName).getGameName();
+		gameName = Objects.requireNonNull(Games.getByDisplayName(gameName)).getGameName();
 		int i = 1;
 		String servName = gameName + i;
 
@@ -204,8 +196,7 @@ public class ServersManager {
 						+ ", " + this.servers.get(name).getServerInfo().getAddress().getAddress().getHostAddress() + ":"
 						+ this.servers.get(name).getServerInfo().getAddress().getPort());
 		this.servers.remove(name);
-		if (ProxyServer.getInstance().getServers().containsKey(name))
-			ProxyServer.getInstance().getServers().remove(name);
+		ProxyServer.getInstance().getServers().remove(name);
 		GameServers.get().getTasksManager().addTask(() -> {
 			final Jedis j = GameServers.get().getConnector().getBungeeResource();
 			j.hdel("servers", name);

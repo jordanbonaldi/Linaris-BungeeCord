@@ -14,9 +14,7 @@ public class ConnectToServerEvent implements Listener {
 	@EventHandler
 	public void OnPlayerSwicth(final ServerConnectEvent e) throws Exception {
 		final BPlayer p = BPlayerHandler.get().getPlayer(e.getPlayer());
-
-		if (!p.isLogged() && e.getTarget().getName().startsWith("Login")) {
-			System.out.println("toto");
+		if (!p.isLogged()) {
 			p.tryLogPlayer();
 			return;
 		} else if (e.getTarget().getName().startsWith("Login")) {
@@ -25,13 +23,11 @@ public class ConnectToServerEvent implements Listener {
 		}
 
 		if (e.getPlayer().getServer() == null) {
-			final ServerInfo s = GameServers.get().getLoginsserver().stream()
-					.sorted((e1, e2) -> e2.getPlayers().size() - e1.getPlayers().size()).findFirst().orElse(null);
+			final ServerInfo s = GameServers.get().getLoginsserver().stream().min((e1, e2) -> e2.getPlayers().size() - e1.getPlayers().size()).orElse(null);
 
 			if (s == null)
 				return;
 			e.setTarget(s);
-			return;
 		}
 	}
 

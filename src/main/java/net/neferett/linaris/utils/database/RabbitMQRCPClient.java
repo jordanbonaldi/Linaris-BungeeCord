@@ -48,7 +48,6 @@ public class RabbitMQRCPClient {
 	}
 
 	public void send() throws Exception {
-
 		connection = RabbitMQUtils.getConnection();
 		channel = connection.createChannel();
 
