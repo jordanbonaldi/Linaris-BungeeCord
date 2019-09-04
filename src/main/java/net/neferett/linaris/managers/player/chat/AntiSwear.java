@@ -9,6 +9,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.neferett.linaris.GameServers;
+import net.neferett.linaris.managers.player.BPlayerHandler;
 import net.neferett.linaris.utils.files.ReadFile;
 
 public class AntiSwear implements Listener {
@@ -36,6 +37,8 @@ public class AntiSwear implements Listener {
 	}
 
 	public void onSwear(final ChatEvent e) {
+		if (BPlayerHandler.get().getPlayer((ProxiedPlayer) e.getSender()).getRank().getModerationLevel() > 1)
+			return;
 		final String message = this.removeByPassingAttempts(e.getMessage().toLowerCase());
 
 		for (int i = 0; i < message.length(); i++)

@@ -7,6 +7,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.neferett.linaris.GameServers;
+import net.neferett.linaris.managers.player.BPlayer;
+import net.neferett.linaris.managers.player.BPlayerHandler;
 import net.neferett.linaris.utils.stringutils.LevenshteinDistance;
 
 public class AntiSpam implements Listener {
@@ -84,6 +87,9 @@ public class AntiSpam implements Listener {
 			return;
 		final ProxiedPlayer p = (ProxiedPlayer) e.getSender();
 		final String message = e.getMessage();
+
+		if (BPlayerHandler.get().getPlayer(p).getRank().getModerationLevel() > 1)
+			return;
 		if (this.mutes.containsKey(p.getName().toLowerCase()))
 			if (this.mutes.get(p.getName().toLowerCase()) > System.currentTimeMillis()) {
 				p.sendMessage(TextComponent.fromLegacyText("§f[§c§lGuarden§f] §7Vous ne pouvez pas parler."));
