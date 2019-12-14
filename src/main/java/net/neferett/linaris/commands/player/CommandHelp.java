@@ -24,12 +24,6 @@ public class CommandHelp extends Command{
                 .append(ChatColor.WHITE + "- ")
                 .append(ChatColor.GRAY + "affiche votre solde en " + ChatColor.YELLOW + "Coins")
                 .create();
-        BaseComponent[] credits = new MyBuilder(ChatColor.GREEN + "/credits ")
-                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GREEN + "Clique pour exécuter la commande.")))
-                .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/credits "))
-                .append(ChatColor.WHITE + "- ")
-                .append(ChatColor.GRAY + "affiche votre solde en " + ChatColor.AQUA + "Credits")
-                .create();
         BaseComponent[] friends = new MyBuilder(ChatColor.GREEN + "/friend ")
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.GREEN + "Clique pour exécuter la commande.")))
                 .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend "))
@@ -73,7 +67,6 @@ public class CommandHelp extends Command{
                 .append(ChatColor.GRAY + "permet de changer son mot de passe")
                 .create();
         sender.sendMessage(coins);
-        sender.sendMessage(credits);
         sender.sendMessage(friends);
         sender.sendMessage(party);
         sender.sendMessage(hub);

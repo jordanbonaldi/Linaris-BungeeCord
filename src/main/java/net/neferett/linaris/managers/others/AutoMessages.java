@@ -38,9 +38,7 @@ public class AutoMessages {
 		}
 
 		t.addExtra("\n\n");
-		ProxyServer.getInstance().getPlayers().forEach(p -> {
-			p.sendMessage(t);
-		});
+		ProxyServer.getInstance().getPlayers().forEach(p -> p.sendMessage(t));
 	}
 
 	public String getDesc() {

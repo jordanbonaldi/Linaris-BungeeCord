@@ -11,10 +11,8 @@ import net.neferett.linaris.managers.player.BPlayerHandler;
 
 public class CommandTokens extends Command {
 
-	Map<String, String> map = null;
-
 	public CommandTokens() {
-		super("tokens");
+		super("coins");
 	}
 
 	@SuppressWarnings("deprecation")
@@ -22,7 +20,7 @@ public class CommandTokens extends Command {
 	public void execute(final CommandSender sender, final String[] args) {
 		if (!(sender instanceof ProxiedPlayer))
 			if (args.length < 2) {
-				sender.sendMessage("§c/tokens give|get|remove|set <player> <value>");
+				sender.sendMessage("§c/coins give|get|remove|set <player> <value>");
 				return;
 			} else {
 				final BPlayer p = BPlayerHandler.get().getPlayer(args[1]);
@@ -36,42 +34,42 @@ public class CommandTokens extends Command {
 					p.addTokens(Integer.parseInt(args[2]));
 					if (args[0].equalsIgnoreCase("remove")) {
 						p.removeTokens(Integer.parseInt(args[2]));
-						sender.sendMessage("§f§m----------- §r§c Guarden §f§m-----------");
+						sender.sendMessage("§f§m----------- §r§c Boutique §f§m-----------");
 						sender.sendMessage("§f");
 						sender.sendMessage(
-								"§7Vous avez ajouté §e" + Integer.parseInt(args[2]) + " Senzus §7a " + p.getName());
+								"§7Vous avez ajouté §e" + Integer.parseInt(args[2]) + " coins §7a " + p.getName());
 						sender.sendMessage("");
 						sender.sendMessage("§7Le joueur §e" + p.getName() + " §7a désormais §e"
-								+ p.getData().getTokens() + " Senzus");
+								+ p.getData().getTokens() + " coins");
 						sender.sendMessage("");
 					}
 					return;
 				} else if (args[0].equalsIgnoreCase("get")) {
-					sender.sendMessage("§f§m----------- §r§c Guarden §f§m-----------");
+					sender.sendMessage("§f§m----------- §r§c Boutique §f§m-----------");
 					sender.sendMessage("§f");
 					sender.sendMessage(
-							"§7Le joueur §e" + p.getName() + " §7a §e" + p.getData().getTokens() + " Senzus");
+							"§7Le joueur §e" + p.getName() + " §7a §e" + p.getData().getTokens() + " coins");
 					sender.sendMessage("");
 					return;
 				} else if (args[0].equalsIgnoreCase("remove")) {
 					p.removeTokens(Integer.parseInt(args[2]));
-					sender.sendMessage("§f§m----------- §r§c Guarden §f§m-----------");
+					sender.sendMessage("§f§m----------- §r§c Boutique §f§m-----------");
 					sender.sendMessage("§f");
 					sender.sendMessage(
-							"§7Vous avez rétiré §e" + Integer.parseInt(args[2]) + " Senzus §7a " + p.getName());
+							"§7Vous avez rétiré §e" + Integer.parseInt(args[2]) + " coins §7a " + p.getName());
 					sender.sendMessage("");
 					sender.sendMessage(
-							"§7Le joueur §e" + p.getName() + " §7a désormais §e" + p.getData().getTokens() + " Senzus");
+							"§7Le joueur §e" + p.getName() + " §7a désormais §e" + p.getData().getTokens() + " coins");
 					sender.sendMessage("");
 					return;
 				} else if (args[0].equalsIgnoreCase("set")) {
 					p.setTokens(Integer.parseInt(args[2]));
-					sender.sendMessage("§f§m----------- §r§c Guarden §f§m-----------");
+					sender.sendMessage("§f§m----------- §r§c Boutique §f§m-----------");
 					sender.sendMessage("§f");
-					sender.sendMessage("§7Vous avez set §e" + Integer.parseInt(args[2]) + " Senzus §7a " + p.getName());
+					sender.sendMessage("§7Vous avez set §e" + Integer.parseInt(args[2]) + " coins §7a " + p.getName());
 					sender.sendMessage("");
 					sender.sendMessage(
-							"§7Le joueur §e" + p.getName() + " §7a ainsi §e" + p.getData().getTokens() + " Senzus");
+							"§7Le joueur §e" + p.getName() + " §7a ainsi §e" + p.getData().getTokens() + " coins");
 					sender.sendMessage("");
 					return;
 				}

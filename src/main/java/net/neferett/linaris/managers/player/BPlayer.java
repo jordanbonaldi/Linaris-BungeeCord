@@ -74,12 +74,12 @@ public class BPlayer {
 		if (this.p != null && this.p.isConnected()) {
 			for (int i = 0; i < 25; i++)
 				this.sendMessage("");
-			this.sendMessage("§f§m----------- §r§c Guarden §f§m-----------");
+			this.sendMessage("§f§m----------- §r§c Boutique §f§m-----------");
 			this.sendMessage("§f");
 			this.sendMessage("§aFélicitation !");
-			this.sendMessage("§7Vous venez de recevoir §e" + t + " Tokens");
+			this.sendMessage("§7Vous venez de recevoir §e" + t + " Coins");
 			this.sendMessage("");
-			this.sendMessage("§7Vous avez maintenant §f: §e" + this.getData().getTokens() + " Tokens");
+			this.sendMessage("§7Vous avez maintenant §f: §e" + this.getData().getTokens() + " Coins");
 			this.sendMessage("");
 			new PlayerBuy(BuyItem.TOKEN, this.p.getName(), t, this.p.getAddress().getAddress().getHostAddress(),
 					new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss").format(Calendar.getInstance().getTime()),

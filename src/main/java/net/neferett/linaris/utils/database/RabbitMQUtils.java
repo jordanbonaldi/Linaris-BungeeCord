@@ -13,7 +13,7 @@ public class RabbitMQUtils {
 	private static Connection	connection;
 	private static String		rabbitHost		= "127.0.0.1";
 
-	private static String		rabbitPassword	= "toto";
+	private static String		rabbitPassword	= System.getenv("REDIS_PASSWORD");
 
 	private static String		rabbitUsername	= "admin";
 
